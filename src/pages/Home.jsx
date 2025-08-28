@@ -2,9 +2,12 @@
 import * as React from 'react'
 import Classic from '../templates/Classic'
 import { Box, CircularProgress, Alert } from '@mui/material'
+import Modern from '../templates/Modern'
 
 const API_URL = import.meta.env.VITE_API_URL
 const TENANT = import.meta.env.VITE_TENANT_DOMAIN || window.location.host
+
+console.log(API_URL, "api url")
 
 export default function Home({ cfg }) {
   const key = (cfg.templateKey || 'classic').toLowerCase()
@@ -61,7 +64,7 @@ export default function Home({ cfg }) {
     )
   }
 
-  if (key === 'classic') return <Classic cfg={cfg} hotel={hotel} />
-
+  if (key === 'classic') return <Modern cfg={cfg} hotel={hotel} />
+if (key === 'modern') return <Modern cfg={cfg} hotel={hotel} />
   return <Box p={3}>Plantilla no disponible: {key}</Box>
 }
