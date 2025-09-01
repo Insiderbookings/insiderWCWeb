@@ -60,6 +60,7 @@ export default function ClassicBook({ cfg = {}, hotel = {} }) {
             </Box>
           </Grid>
         </Grid>
+
       </Box>
     </ClassicLayout>
   )
