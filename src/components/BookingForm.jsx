@@ -31,11 +31,16 @@ export default function BookingForm({ cfg = {}, hotel = {} }) {
   const [error, setError] = React.useState('')
   const [result, setResult] = React.useState(null)
 
-  // Prefill from query params if present
+  // Prefill from query params or props if present
   React.useEffect(() => {
     try {
       const usp = new URLSearchParams(window.location.search)
-      const optionRefId = usp.get('optionRefId') || usp.get('rateKey') || ''
+      const optionRefId =
+        usp.get('optionRefId') ||
+        usp.get('rateKey') ||
+        cfg.optionRefId ||
+        hotel.optionRefId ||
+        ''
       const ci = usp.get('ci') || usp.get('checkIn')
       const co = usp.get('co') || usp.get('checkOut')
       const hotelParam = usp.get('hotel') || ''
@@ -47,7 +52,7 @@ export default function BookingForm({ cfg = {}, hotel = {} }) {
         checkOut: co || s.checkOut,
       }))
     } catch {}
-  }, [])
+  }, [cfg, hotel])
 
   // Stripe.js setup (no react wrapper)
   const stripeRef = React.useRef(null)
@@ -193,9 +198,6 @@ export default function BookingForm({ cfg = {}, hotel = {} }) {
             </Stack>
             <Typography variant="subtitle1" fontWeight={700}>Datos de la opción</Typography>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField label="optionRefId" value={form.optionRefId} onChange={onChange('optionRefId')} fullWidth required />
-              </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField type="date" label="Check-in" InputLabelProps={{ shrink: true }} value={form.checkIn} onChange={onChange('checkIn')} fullWidth />
               </Grid>
