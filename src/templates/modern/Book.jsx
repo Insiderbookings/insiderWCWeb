@@ -1,6 +1,7 @@
 import * as React from "react"
 import { ThemeProvider, createTheme } from "@mui/material/styles"
 import { Box, Typography, CssBaseline } from "@mui/material"
+import BookingForm from "../../components/BookingForm"
 
 export default function ModernBook({ cfg = {}, hotel = {} }) {
   const primary = cfg.primaryColor || "#0EA5E9"
@@ -42,7 +43,7 @@ export default function ModernBook({ cfg = {}, hotel = {} }) {
         <Typography variant="h4" gutterBottom>
           Book your stay {hotel?.hotelName ? `at ${hotel.hotelName}` : ""}
         </Typography>
-        <Typography>Modern booking page placeholder.</Typography>
+        <BookingForm cfg={cfg} hotel={hotel} />
       </Box>
     </ThemeProvider>
   )

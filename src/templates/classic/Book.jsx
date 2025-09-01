@@ -1,10 +1,11 @@
 import * as React from "react"
 import { ThemeProvider, createTheme } from "@mui/material/styles"
 import { Box, Typography, CssBaseline } from "@mui/material"
+import BookingForm from "../../components/BookingForm"
 
 export default function ClassicBook({ cfg = {}, hotel = {} }) {
   const primary = cfg.primaryColor || "#d4af37"
-  the secondary = cfg.secondaryColor || "#0b0e13"
+  const secondary = cfg.secondaryColor || "#0b0e13"
   const font = cfg.fontFamily || "Inter, system-ui, sans-serif"
 
   const theme = createTheme({
@@ -30,7 +31,7 @@ export default function ClassicBook({ cfg = {}, hotel = {} }) {
         <Typography variant="h4" gutterBottom>
           Book your stay {hotel?.hotelName ? `at ${hotel.hotelName}` : ""}
         </Typography>
-        <Typography>Classic booking page placeholder.</Typography>
+        <BookingForm cfg={cfg} hotel={hotel} />
       </Box>
     </ThemeProvider>
   )
