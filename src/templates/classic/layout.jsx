@@ -1,0 +1,439 @@
+import * as React from "react"
+import {
+  AppBar,
+  Toolbar,
+  Container,
+  Box,
+  Stack,
+  Typography,
+  IconButton,
+  Button,
+  Link as MLink,
+  Badge,
+  Divider,
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemText,
+  CssBaseline,
+} from "@mui/material"
+import { createTheme, ThemeProvider } from "@mui/material/styles"
+import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded"
+import InstagramIcon from "@mui/icons-material/Instagram"
+import LinkedInIcon from "@mui/icons-material/LinkedIn"
+import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen"
+import SearchIcon from "@mui/icons-material/Search"
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined"
+import MenuIcon from "@mui/icons-material/Menu"
+import MailOutlineIcon from "@mui/icons-material/MailOutline"
+import RoomOutlinedIcon from "@mui/icons-material/RoomOutlined"
+
+export const getDescription = (descriptions, langPref = "en") => {
+  if (!descriptions) return ""
+  if (Array.isArray(descriptions) && descriptions.length > 0) {
+    const byLang =
+      descriptions.find((d) => d?.language === langPref)?.text ||
+      descriptions.find((d) => d?.language === "en")?.text ||
+      descriptions[0]?.text
+    return byLang || ""
+  }
+  if (typeof descriptions === "string") return descriptions
+  return ""
+}
+
+export const getHeroSubtitle = (hotel) => {
+  const sub = getDescription(hotel?.descriptions, "en")
+  if (sub && sub.trim().length > 0) return sub
+  return "Your perfect stay awaits."
+}
+
+const formatFullAddress = (location) => {
+  if (!location) return ""
+  const parts = [
+    location.address,
+    location.city,
+    location.zipCode,
+    location.country,
+  ].filter(Boolean)
+  return parts.join(", ")
+}
+
+export default function ClassicLayout({ cfg = {}, hotel = {}, children }) {
+  const primary = cfg.primaryColor || "#d4af37"
+  const secondary = cfg.secondaryColor || "#0b0e13"
+  const font = cfg.fontFamily || "Inter, system-ui, sans-serif"
+  const ex = cfg?.extra || {}
+  const social = cfg?.social || {}
+  const cartCount = Number.isFinite(cfg?.cartCount) ? cfg.cartCount : 0
+
+  const pages =
+    cfg?.pages || ["HOME", "DARK", "ROOMS & SUITES", "PAGES", "NEWS", "CONTACT"]
+
+  const hero = {
+    title: hotel?.hotelName || "Hotel",
+    subtitle: getHeroSubtitle(hotel),
+    image:
+      ex.heroImage ||
+      "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=1800&auto=format&fit=crop",
+    ctaText: ex.heroCtaText || "BOOK NOW",
+    ctaHref: ex.heroCtaHref || "#book",
+  }
+
+  const theme = createTheme({
+    typography: {
+      fontFamily: font,
+    },
+    palette: {
+      mode: "dark",
+      primary: { main: primary },
+      background: { default: secondary, paper: secondary },
+    },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: { borderRadius: 12, textTransform: "none", fontWeight: 800 },
+        },
+      },
+    },
+  })
+
+  const address = formatFullAddress(hotel?.location)
+  const email = hotel?.contact?.email || ""
+
+  const [open, setOpen] = React.useState(false)
+  const toggle = () => setOpen((v) => !v)
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box sx={{ bgcolor: secondary, color: "#fff", minHeight: "100vh" }}>
+        {/* ===== NAV (transparente) ===== */}
+        <AppBar
+          position="absolute"
+          elevation={0}
+          sx={{
+            top: 0,
+            left: 0,
+            right: 0,
+            bgcolor: "transparent",
+            color: "#fff",
+            borderBottom: "1px solid rgba(255,255,255,.08)",
+          }}
+        >
+          {/* Top bar */}
+          <Box sx={{ borderBottom: "1px solid rgba(255,255,255,.08)" }}>
+            <Container maxWidth="xl">
+              <Toolbar
+                variant="dense"
+                sx={{
+                  px: 0,
+                  minHeight: 56,
+                  justifyContent: "space-between",
+                  color: "rgba(255,255,255,.8)",
+                }}
+              >
+                {/* Social left */}
+                <Stack direction="row" spacing={2} alignItems="center">
+                  {social.facebook && (
+                    <MLink
+                      href={social.facebook}
+                      underline="none"
+                      aria-label="Facebook"
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        color: "inherit",
+                        "&:hover": { color: primary },
+                      }}
+                    >
+                      <FacebookRoundedIcon fontSize="small" />
+                    </MLink>
+                  )}
+                  {social.instagram && (
+                    <MLink
+                      href={social.instagram}
+                      underline="none"
+                      aria-label="Instagram"
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        color: "inherit",
+                        "&:hover": { color: primary },
+                      }}
+                    >
+                      <InstagramIcon fontSize="small" />
+                    </MLink>
+                  )}
+                  {social.linkedin && (
+                    <MLink
+                      href={social.linkedin}
+                      underline="none"
+                      aria-label="LinkedIn"
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        color: "inherit",
+                        "&:hover": { color: primary },
+                      }}
+                    >
+                      <LinkedInIcon fontSize="small" />
+                    </MLink>
+                  )}
+                  {social.x && (
+                    <MLink
+                      href={social.x}
+                      underline="none"
+                      aria-label="X"
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        color: "inherit",
+                        "&:hover": { color: primary },
+                      }}
+                    >
+                      <CloseFullscreenIcon
+                        fontSize="small"
+                        sx={{ transform: "rotate(45deg)" }}
+                      />
+                    </MLink>
+                  )}
+                </Stack>
+
+                {/* Contact right */}
+                <Stack
+                  direction="row"
+                  spacing={3}
+                  alignItems="center"
+                  sx={{ fontSize: 13 }}
+                >
+                  {email && (
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <MailOutlineIcon sx={{ fontSize: 16, color: primary }} />
+                      <span>{email}</span>
+                    </Stack>
+                  )}
+                  {address && (
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <RoomOutlinedIcon sx={{ fontSize: 16, color: primary }} />
+                      <span>{address}</span>
+                    </Stack>
+                  )}
+                </Stack>
+              </Toolbar>
+            </Container>
+          </Box>
+
+          {/* Main bar */}
+          <Container maxWidth="xl">
+            <Toolbar
+              disableGutters
+              sx={{
+                minHeight: 68,
+                px: 0,
+                position: "relative",
+              }}
+            >
+              {/* Left: Logo */}
+              <Stack
+                direction="row"
+                spacing={1}
+                alignItems="center"
+                sx={{ zIndex: 2 }}
+              >
+                {cfg.logoUrl ? (
+                  <Box
+                    component="img"
+                    src={cfg.logoUrl}
+                    alt="logo"
+                    sx={{ width: 42, height: 42, objectFit: "contain" }}
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      width: 42,
+                      height: 42,
+                      borderRadius: "8px",
+                      bgcolor: "transparent",
+                      border: `2px solid ${primary}`,
+                    }}
+                  />
+                )}
+              </Stack>
+
+              {/* Center: Menu */}
+              <Stack
+                direction="row"
+                spacing={3}
+                alignItems="center"
+                sx={{
+                  position: "absolute",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  display: { xs: "none", md: "flex" },
+                }}
+              >
+                {pages.map((p) => (
+                  <Button
+                    key={p}
+                    sx={{
+                      color: "#fff",
+                      fontWeight: 700,
+                      letterSpacing: 0.6,
+                      "&:hover": { color: primary, background: "transparent" },
+                    }}
+                    href={`#${p.toLowerCase().replace(/\s+/g, "-")}`}
+                  >
+                    {p}
+                  </Button>
+                ))}
+              </Stack>
+
+              {/* Right: icons */}
+              <Stack
+                direction="row"
+                spacing={1.5}
+                alignItems="center"
+                sx={{ marginLeft: "auto", zIndex: 2 }}
+              >
+                <IconButton
+                  color="inherit"
+                  sx={{ "&:hover": { color: primary } }}
+                >
+                  <SearchIcon />
+                </IconButton>
+                <IconButton
+                  color="inherit"
+                  sx={{ "&:hover": { color: primary } }}
+                >
+                  <Badge badgeContent={cartCount} color="default" overlap="circular">
+                    <ShoppingCartOutlinedIcon />
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  color="inherit"
+                  onClick={toggle}
+                  sx={{
+                    display: { xs: "inline-flex", md: "inline-flex" },
+                    "&:hover": { color: primary },
+                  }}
+                >
+                  <MenuIcon />
+                </IconButton>
+              </Stack>
+            </Toolbar>
+          </Container>
+        </AppBar>
+
+        {/* Drawer móvil */}
+        <Drawer anchor="right" open={open} onClose={toggle}>
+          <Box
+            role="presentation"
+            sx={{ width: 280, bgcolor: secondary, height: "100%" }}
+          >
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              sx={{ px: 2, py: 2 }}
+            >
+              <Typography variant="h6" sx={{ fontWeight: 800 }}>
+                {hotel?.hotelName || "Hotel"}
+              </Typography>
+              <IconButton onClick={toggle} color="inherit">
+                <MenuIcon />
+              </IconButton>
+            </Stack>
+            <Divider sx={{ borderColor: "rgba(255,255,255,.08)" }} />
+            <List>
+              {pages.map((p) => (
+                <ListItemButton
+                  key={p}
+                  component="a"
+                  href={`#${p.toLowerCase().replace(/\s+/g, "-")}`}
+                  onClick={toggle}
+                >
+                  <ListItemText
+                    primary={p}
+                    primaryTypographyProps={{ fontWeight: 700 }}
+                  />
+                </ListItemButton>
+              ))}
+            </List>
+          </Box>
+        </Drawer>
+
+        {/* ===== HERO ===== */}
+        <Box
+          sx={{
+            position: "relative",
+            minHeight: { xs: 520, md: 720 },
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            backgroundImage: `url(${hero.image})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            color: "#fff",
+            px: 2,
+          }}
+        >
+          {/* overlay */}
+          <Box
+            sx={{
+              position: "absolute",
+              inset: 0,
+              background:
+                `radial-gradient(1200px 520px at 15% 50%, rgba(0,0,0,.0) 0%, rgba(0,0,0,.35) 60%, rgba(0,0,0,.65) 100%),` +
+                `linear-gradient(180deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,.55) 70%, rgba(0,0,0,.65) 100%)`,
+            }}
+          />
+          <Box sx={{ position: "relative", zIndex: 1, maxWidth: 900, mt: 6 }}>
+            <Typography variant="h2" sx={{ fontWeight: 900, letterSpacing: ".5px" }}>
+              {hero.title}
+            </Typography>
+            <Typography sx={{ mt: 1.5, opacity: 0.92 }}>
+              {hero.subtitle}
+            </Typography>
+            <Button
+              href={hero.ctaHref}
+              size="large"
+              sx={{
+                mt: 3,
+                px: 4,
+                borderRadius: 2,
+                bgcolor: primary,
+                color: "#111",
+                fontWeight: 800,
+                "&:hover": { bgcolor: primary },
+              }}
+            >
+              {hero.ctaText}
+            </Button>
+          </Box>
+        </Box>
+
+        {/* ===== CONTENT ===== */}
+        <Container maxWidth="lg" sx={{ py: { xs: 6, md: 8 } }}>
+          {children}
+        </Container>
+
+        {/* ===== FOOTER ===== */}
+        <Box
+          component="footer"
+          sx={{
+            borderTop: "1px solid rgba(255,255,255,.08)",
+            py: 4,
+            textAlign: "center",
+            opacity: 0.85,
+          }}
+        >
+          <Typography sx={{ fontSize: 14 }}>
+            © {new Date().getFullYear()} {hotel?.hotelName || "Hotel"}. All rights reserved.
+          </Typography>
+        </Box>
+      </Box>
+    </ThemeProvider>
+  )
+}
+
