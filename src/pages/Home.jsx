@@ -3,6 +3,7 @@ import * as React from 'react'
 import Classic from '../templates/Classic'
 import { Box, CircularProgress, Alert } from '@mui/material'
 import Modern from '../templates/Modern'
+import { useHotel } from '../HotelContext'
 
 const API_URL = import.meta.env.VITE_API_URL
 const TENANT = import.meta.env.VITE_TENANT_DOMAIN || window.location.host
@@ -12,7 +13,7 @@ console.log(API_URL, "api url")
 export default function Home({ cfg }) {
   const key = (cfg.templateKey || 'classic').toLowerCase()
 
-  const [hotel, setHotel] = React.useState(null)
+  const { hotel, setHotel } = useHotel()
   const [loading, setLoad] = React.useState(true)
   const [error, setError] = React.useState(null)
 

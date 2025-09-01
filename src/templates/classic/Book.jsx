@@ -4,7 +4,7 @@ import { Box, Typography, CssBaseline } from "@mui/material"
 
 export default function ClassicBook({ cfg = {}, hotel = {} }) {
   const primary = cfg.primaryColor || "#d4af37"
-  the secondary = cfg.secondaryColor || "#0b0e13"
+  const secondary = cfg.secondaryColor || "#0b0e13"
   const font = cfg.fontFamily || "Inter, system-ui, sans-serif"
 
   const theme = createTheme({
