@@ -34,7 +34,6 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined"
 import MenuIcon from "@mui/icons-material/Menu"
 import HotelIcon from "@mui/icons-material/Hotel"
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline"
-import { Link as RouterLink } from "react-router-dom"
 
 // ------------ helpers ------------
 const getDescription = (descriptions, langPref = "es") => {
@@ -100,7 +99,7 @@ export default function Classic({ cfg = {}, hotel = {} }) {
       ex.heroImage ||
       "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=1800&auto=format&fit=crop",
     ctaText: ex.heroCtaText || "BOOK NOW",
-    ctaHref: ex.heroCtaHref || "/book",
+    ctaHref: ex.heroCtaHref || "#book",
   }
 
   const theme = createTheme({
@@ -420,8 +419,7 @@ export default function Classic({ cfg = {}, hotel = {} }) {
               {hero.subtitle}
             </Typography>
             <Button
-              component={RouterLink}
-              to={hero.ctaHref}
+              href={hero.ctaHref}
               size="large"
               sx={{
                 mt: 3,
