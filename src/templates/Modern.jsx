@@ -35,7 +35,6 @@ import HotelOutlinedIcon from "@mui/icons-material/HotelOutlined"
 import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined"
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined"
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined"
-import { Link as RouterLink } from "react-router-dom"
 
 // ---------- helpers ----------
 const getDescription = (descriptions, langPref = "en") => {
@@ -133,7 +132,7 @@ export default function Modern({ cfg = {}, hotel = {} }) {
       ex.heroImage ||
       "https://images.unsplash.com/photo-1528909514045-2fa4ac7a08ba?q=80&w=1800&auto=format&fit=crop",
     ctaText: ex.heroCtaText || "Book now",
-    ctaHref: ex.heroCtaHref || "/book",
+    ctaHref: ex.heroCtaHref || "#contact",
   }
 
   const address = fullAddress(hotel?.location)
@@ -231,7 +230,7 @@ export default function Modern({ cfg = {}, hotel = {} }) {
                     <ShoppingCartOutlinedIcon />
                   </Badge>
                 </IconButton>
-                <Button variant="contained" component={RouterLink} to={hero.ctaHref}>
+                <Button variant="contained" href={hero.ctaHref}>
                   {hero.ctaText}
                 </Button>
                 <IconButton onClick={toggle} sx={{ display: { md: "none" } }}>
@@ -283,7 +282,7 @@ export default function Modern({ cfg = {}, hotel = {} }) {
                 <Chip icon={<HotelOutlinedIcon />} label="Curated rooms" />
               </Stack>
               <Stack direction="row" spacing={1.5} sx={{ mt: 4 }}>
-                <Button variant="contained" size="large" component={RouterLink} to={hero.ctaHref}>
+                <Button variant="contained" size="large" href={hero.ctaHref}>
                   {hero.ctaText}
                 </Button>
                 <Button variant="outlined" size="large" href="#rooms">
