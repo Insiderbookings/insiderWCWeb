@@ -1,7 +1,7 @@
 import * as React from "react"
 import { ThemeProvider, createTheme } from "@mui/material/styles"
 import { Box, Typography, CssBaseline } from "@mui/material"
-import BookingForm from "../../components/BookingForm"
+import BookingForm from "../../../components/BookingForm"
 
 export default function ClassicBook({ cfg = {}, hotel = {} }) {
   const primary = cfg.primaryColor || "#d4af37"

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
-import ClassicBook from './templates/classic/Book'
-import ModernBook from './templates/modern/Book'
+import ClassicBook from './templates/book/classic/Book'
+import ModernBook from './templates/book/modern/Book'
 import NotFound from './pages/NotFound'
 import { useHotel } from './HotelContext'
 
