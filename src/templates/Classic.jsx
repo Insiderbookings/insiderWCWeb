@@ -34,9 +34,10 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined"
 import MenuIcon from "@mui/icons-material/Menu"
 import HotelIcon from "@mui/icons-material/Hotel"
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline"
+import Availability from "../components/Availability"
 
 // ------------ helpers ------------
-const getDescription = (descriptions, langPref = "es") => {
+const getDescription = (descriptions, langPref = "en") => {
   if (!descriptions) return ""
   // puede venir como [] de {text, language} o como string
   if (Array.isArray(descriptions) && descriptions.length > 0) {
@@ -51,9 +52,9 @@ const getDescription = (descriptions, langPref = "es") => {
 }
 
 const getHeroSubtitle = (hotel) => {
-  const sub = getDescription(hotel?.descriptions, "es")
+  const sub = getDescription(hotel?.descriptions, "en")
   if (sub && sub.trim().length > 0) return sub
-  return "Tu estadía perfecta te espera."
+  return "Your perfect stay awaits."
 }
 
 const formatFullAddress = (location) => {
@@ -486,7 +487,7 @@ export default function Classic({ cfg = {}, hotel = {} }) {
                     Reservá directo
                   </Typography>
                   <Typography sx={{ opacity: 0.85, mb: 2 }}>
-                    Dejanos tus datos y te contactamos para completar la reserva.
+                    Leave your details and we will contact you to complete the booking.
                   </Typography>
                   <Stack spacing={1} sx={{ fontSize: 14 }}>
                     {address && (
@@ -520,12 +521,15 @@ export default function Classic({ cfg = {}, hotel = {} }) {
                     }}
                     href={ex.heroCtaHref || "#"}
                   >
-                    Solicitar reserva
+                    Request booking
                   </Button>
                 </Box>
               </Grid>
             </Grid>
           </Box>
+
+          {/* Availability & Booking */}
+          <Availability hotel={hotel} />
 
           {/* Rooms & Suites */}
           <Box id="rooms-&-suites" sx={{ mt: { xs: 8, md: 10 } }}>
@@ -542,7 +546,7 @@ export default function Classic({ cfg = {}, hotel = {} }) {
             </Stack>
             {rooms.length === 0 ? (
               <Typography sx={{ opacity: 0.8 }}>
-                Próximamente publicaremos nuestras habitaciones.
+                Rooms coming soon.
               </Typography>
             ) : (
               <Grid container spacing={3}>
@@ -607,7 +611,7 @@ export default function Classic({ cfg = {}, hotel = {} }) {
                               "&:hover": { bgcolor: primary },
                             }}
                           >
-                            Reservar
+                            Book
                           </Button>
                         </Stack>
                       </Box>

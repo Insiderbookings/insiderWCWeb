@@ -20,7 +20,7 @@ export default function App() {
         applyBranding({
           fontFamily: data.fontFamily,
           faviconUrl: data.faviconUrl,
-          title: data?.extra?.siteTitle || 'Sitio'
+          title: data?.extra?.siteTitle || 'Site'
         })
         const th = createTheme({
           palette: { mode: 'light', primary: { main: data.primaryColor || '#2563eb' } },
@@ -29,7 +29,7 @@ export default function App() {
         })
         setTheme(th)
       } catch (e) {
-        setError(String(e.message || 'No se pudo cargar la configuración'))
+        setError(String(e.message || 'Could not load configuration'))
       }
     })()
     return () => { alive = false }

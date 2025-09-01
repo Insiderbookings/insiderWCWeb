@@ -51,7 +51,7 @@ export default function Home({ cfg }) {
   if (loading) {
     return (
       <Box p={3} display="flex" alignItems="center" gap={2}>
-        <CircularProgress size={22} /> Cargando hotel…
+        <CircularProgress size={22} /> Loading hotel…
       </Box>
     )
   }
@@ -59,12 +59,12 @@ export default function Home({ cfg }) {
   if (error) {
     return (
       <Box p={3}>
-        <Alert severity="error">No se pudo cargar el hotel: {error}</Alert>
+        <Alert severity="error">Failed to load hotel: {error}</Alert>
       </Box>
     )
   }
 
-  if (key === 'classic') return <Modern cfg={cfg} hotel={hotel} />
-if (key === 'modern') return <Modern cfg={cfg} hotel={hotel} />
-  return <Box p={3}>Plantilla no disponible: {key}</Box>
+  if (key === 'classic') return <Classic cfg={cfg} hotel={hotel} />
+  if (key === 'modern') return <Modern cfg={cfg} hotel={hotel} />
+  return <Box p={3}>Template not available: {key}</Box>
 }
