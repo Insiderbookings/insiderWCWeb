@@ -365,8 +365,12 @@ export default function ClassicBook({ cfg = {}, hotel = {} }) {
         <Container maxWidth="lg" sx={{ py: { xs: 6, md: 8 } }}>
           {/* About / Highlights */}
           <Box id="home">
-            <Grid container spacing={4} alignItems="flex-start">
-              <Grid item xs={12} md={7}>
+            <Grid
+              container
+              spacing={{ xs: 4, md: 6 }}
+              alignItems="stretch"
+            >
+              <Grid item xs={12} md={6}>
                 <Typography variant="h4" sx={{ fontWeight: 900 }}>
                   Bienvenido a {hotel?.hotelName || "nuestro hotel"}
                 </Typography>
@@ -395,16 +399,22 @@ export default function ClassicBook({ cfg = {}, hotel = {} }) {
                   />
                 </Stack>
               </Grid>
-              <Grid item xs={12} md={5}>
+              <Grid
+                item
+                xs={12}
+                md={6}
+                sx={{ display: "flex", mt: { xs: 4, md: 0 } }}
+              >
                 <Box
                   id="book"
                   sx={{
-                    p: 3,
+                    p: { xs: 2.5, md: 4 },
                     borderRadius: 3,
                     border: "1px solid rgba(255,255,255,.12)",
                     background:
                       "linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02))",
                     backdropFilter: "blur(6px)",
+                    flexGrow: 1,
                   }}
                 >
                   <Typography variant="h6" sx={{ fontWeight: 800, mb: 1 }}>
