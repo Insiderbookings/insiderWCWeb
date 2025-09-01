@@ -1,11 +1,33 @@
 import * as React from 'react'
-import { Container, Box, Typography, Grid, TextField, Button, Alert, MenuItem, Paper, Stack } from '@mui/material'
-import { tgxBookWithCard, tgxCreatePaymentIntent, tgxConfirmAndBook } from '../api/booking'
+import { Container, Box, Typography, Grid, TextField, Button, Alert, MenuItem, Paper, Stack, CssBaseline } from '@mui/material'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { tgxBookWithCard, tgxCreatePaymentIntent, tgxConfirmAndBook } from '../../api/booking'
 
 const todayISO = () => new Date().toISOString().slice(0, 10)
 const addDaysISO = (d) => new Date(Date.now() + d*86400000).toISOString().slice(0, 10)
 
-export default function Book() {
+export default function ClassicBook({ cfg = {} }) {
+  const primary = cfg.primaryColor || '#d4af37'
+  const secondary = cfg.secondaryColor || '#0b0e13'
+  const font = cfg.fontFamily || 'Inter, system-ui, sans-serif'
+
+  const theme = createTheme({
+    typography: {
+      fontFamily: font,
+    },
+    palette: {
+      mode: 'dark',
+      primary: { main: primary },
+      background: { default: secondary, paper: secondary },
+    },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: { borderRadius: 12, textTransform: 'none', fontWeight: 800 },
+        },
+      },
+    },
+  })
   const [form, setForm] = React.useState({
     optionRefId: '',
     checkIn: todayISO(),
@@ -172,8 +194,10 @@ export default function Book() {
     }
   }
 
-  return (
-    <Container maxWidth="md">
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Container maxWidth="md">
       <Box py={4}>
         <Typography variant="h5" fontWeight={800} gutterBottom>
           Book (Demo) – TGX book-with-card
@@ -280,6 +304,7 @@ export default function Book() {
           </Stack>
         </Paper>
       </Box>
-    </Container>
-  )
-}
+        </Container>
+      </ThemeProvider>
+    )
+  }
