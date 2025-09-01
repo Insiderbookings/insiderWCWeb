@@ -413,7 +413,7 @@ export default function ClassicBook({ cfg = {}, hotel = {} }) {
                   <Typography sx={{ opacity: 0.85, mb: 2 }}>
                     Leave your details and we will contact you to complete the booking.
                   </Typography>
-                  <BookingForm cfg={cfg} hotel={hotel} />
+                  <BookingForm compact cfg={cfg} hotel={hotel} />
                 </Box>
               </Grid>
             </Grid>
