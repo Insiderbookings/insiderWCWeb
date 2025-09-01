@@ -4,6 +4,7 @@ import { createTheme, ThemeProvider, CssBaseline, CircularProgress, Box } from '
 import { apiGetPublicConfig } from './api/client'
 import { applyBranding } from './utils/applyBranding'
 import Routes from './routes'
+import { HotelProvider } from './HotelContext'
 
 export default function App() {
   const [cfg, setCfg] = React.useState(null)
@@ -46,7 +47,9 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <Routes cfg={cfg} />
+        <HotelProvider>
+          <Routes cfg={cfg} />
+        </HotelProvider>
       </BrowserRouter>
     </ThemeProvider>
   )
