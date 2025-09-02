@@ -1,6 +1,13 @@
 // src/api/booking.js
-const API_URL = import.meta.env.VITE_API_URL
-const TENANT = import.meta.env.VITE_TENANT_DOMAIN || window.location.host
+// Allow running in non-Vite environments (e.g. Node tests)
+const API_URL =
+  (import.meta.env && import.meta.env.VITE_API_URL) ||
+  (typeof process !== 'undefined' && process.env.VITE_API_URL) ||
+  ''
+const TENANT =
+  (import.meta.env && import.meta.env.VITE_TENANT_DOMAIN) ||
+  (typeof process !== 'undefined' && process.env.VITE_TENANT_DOMAIN) ||
+  (typeof window !== 'undefined' ? window.location.host : '')
 
 function buildHeaders(extra = {}) {
   return {
