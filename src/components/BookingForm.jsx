@@ -114,7 +114,14 @@ export default function BookingForm({ cfg = {}, hotel = {}, compact = false }) {
       card.mount('#card-element')
       cardRef.current = card
     })().catch(console.error)
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+      // limpiar el element si existe para que no quede “pegado”
+      if (cardRef.current) {
+        try { cardRef.current.unmount() } catch {}
+        cardRef.current = null
+      }
+    }
   }, [paymentMode, STRIPE_PK])
 
   const onChange = (k) => (e) => setForm((s) => ({ ...s, [k]: e.target.value }))
@@ -207,20 +214,34 @@ export default function BookingForm({ cfg = {}, hotel = {}, compact = false }) {
     }
   }
 
-  const content = (
-    <Box py={compact ? 0 : 4}>
-      <Typography variant={compact ? 'h6' : 'h5'} fontWeight={800} gutterBottom>
+  // --- UI: standalone vs embedded (compact) ---
+  const Header = () => (
+    <>
+      <Typography variant="h5" fontWeight={800} gutterBottom>
         Book (Demo) – TGX book-with-card
       </Typography>
       <Typography color="text.secondary" gutterBottom>
         Quick test of the direct TGX flow. Use a test card (e.g., 4111 1111 1111 1111).
       </Typography>
+    </>
+  )
+
+  const FormWrapper = compact ? Box : Paper
+  const wrapperProps = compact
+    ? { component: 'form', onSubmit, sx: { p: 0 } }
+    : { component: 'form', onSubmit, variant: 'outlined', sx: { p: 3 } }
+
+  const content = (
+    <Box py={compact ? 0 : 4}>
+      {!compact && <Header />}
 
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
-      <Paper variant="outlined" sx={{ p: compact ? 2 : 3 }} component="form" onSubmit={onSubmit}>
-        <Stack spacing={3}>
-          <Typography variant="subtitle1" fontWeight={700}>Modo de pago</Typography>
+      <FormWrapper {...wrapperProps}>
+        <Stack spacing={compact ? 2 : 3}>
+          <Typography variant="subtitle1" fontWeight={700}>
+            Modo de pago
+          </Typography>
           <Stack direction="row" spacing={2}>
             <Button variant={paymentMode==='stripe'?'contained':'outlined'} onClick={() => setPaymentMode('stripe')}>Stripe (recomendado)</Button>
             <Button variant={paymentMode==='direct'?'contained':'outlined'} onClick={() => setPaymentMode('direct')}>Directo (legacy)</Button>
@@ -296,21 +317,28 @@ export default function BookingForm({ cfg = {}, hotel = {}, compact = false }) {
           )}
 
           <Box>
-            <Button type="submit" variant="contained" disabled={loading}>
-              {loading ? 'Processing…' : 'Confirm and book'}
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={loading}
+              fullWidth={compact}
+            >
+              {loading ? 'Processing…' : (compact ? 'Enviar solicitud' : 'Confirm and book')}
             </Button>
           </Box>
 
           {result && (
             <Box>
               <Alert severity="success" sx={{ mb: 2 }}>Booking realizada</Alert>
-              <Paper variant="outlined" sx={{ p: 2, bgcolor: 'grey.50' }}>
-                <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{JSON.stringify(result, null, 2)}</pre>
-              </Paper>
+              {!compact && (
+                <Paper variant="outlined" sx={{ p: 2, bgcolor: 'grey.50' }}>
+                  <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{JSON.stringify(result, null, 2)}</pre>
+                </Paper>
+              )}
             </Box>
           )}
         </Stack>
-      </Paper>
+      </FormWrapper>
     </Box>
   )
 

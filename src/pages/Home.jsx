@@ -65,7 +65,7 @@ export default function Home({ cfg }) {
     )
   }
 
-  if (key === 'classic') return <Classic cfg={cfg} hotel={hotel} />
+  if (key === 'classic') return <Modern cfg={cfg} hotel={hotel} />
   if (key === 'modern') return <Modern cfg={cfg} hotel={hotel} />
   return <Box p={3}>Template not available: {key}</Box>
 }
