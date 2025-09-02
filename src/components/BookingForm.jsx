@@ -76,6 +76,9 @@ export default function BookingForm({ cfg = {}, hotel = {}, compact = false }) {
         if (cancelled) return
         const np = res?.numberOfPax ?? res?.option?.numberOfPax
         if (Number.isFinite(np)) setNumberOfPax(Number(np))
+        if (res?.optionRefId) {
+          setForm((s) => (s.optionRefId === res.optionRefId ? s : { ...s, optionRefId: res.optionRefId }))
+        }
       } catch (err) {
         console.error('Failed to fetch option details', err)
       }
@@ -157,7 +160,7 @@ export default function BookingForm({ cfg = {}, hotel = {}, compact = false }) {
             children: Number(form.children || 0),
             roomId: null,
           },
-          searchOptionRefId: String(form.optionRefId || '').trim(),
+          optionRefId: String(form.optionRefId || '').trim(),
           source: 'TGX',
         }, { vaultExtra: { vaultKey: 'demo', pageUrl: window.location.href } })
 
