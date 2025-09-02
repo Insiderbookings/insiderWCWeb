@@ -141,7 +141,7 @@ export default function Classic({ cfg = {}, hotel = {} }) {
       <Availability hotel={hotel} />
 
       {/* Rooms & Suites */}
-      <Box id="rooms-&-suites" sx={{ mt: { xs: 8, md: 10 } }}>
+     {/*  <Box id="rooms-&-suites" sx={{ mt: { xs: 8, md: 10 } }}>
         <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
           <HotelIcon sx={{ color: primary }} />
           <Typography variant="h5" sx={{ fontWeight: 900 }}>
@@ -225,7 +225,7 @@ export default function Classic({ cfg = {}, hotel = {} }) {
             ))}
           </Grid>
         )}
-      </Box>
+      </Box> */}
 
       {/* Contacto & Ubicación */}
       <Box id="contact" sx={{ mt: { xs: 8, md: 10 } }}>

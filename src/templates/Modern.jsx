@@ -385,7 +385,7 @@ export default function Modern({ cfg = {}, hotel = {} }) {
         </Container>
 
         {/* ===== ROOMS (horizontal scroll diferente) ===== */}
-        <Container id="rooms" maxWidth="lg" sx={{ pb: { xs: 6, md: 8 } }}>
+        {/* <Container id="rooms" maxWidth="lg" sx={{ pb: { xs: 6, md: 8 } }}>
           <Stack
             direction="row"
             alignItems="center"
@@ -459,7 +459,7 @@ export default function Modern({ cfg = {}, hotel = {} }) {
               ))}
             </Box>
           )}
-        </Container>
+        </Container> */}
 
         {/* ===== AMENITIES (chips sencillas) ===== */}
         <Container id="amenities" maxWidth="lg" sx={{ pb: { xs: 6, md: 8 } }}>
