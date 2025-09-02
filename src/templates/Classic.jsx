@@ -13,7 +13,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline"
 import RoomOutlinedIcon from "@mui/icons-material/RoomOutlined"
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined"
 import MailOutlineIcon from "@mui/icons-material/MailOutline"
-import Availability from "../components/Availability"
+import Availability from "./classic/Availability"
 import ClassicLayout, { getHeroSubtitle } from "./classic/layout"
 
 const formatFullAddress = (location) => {

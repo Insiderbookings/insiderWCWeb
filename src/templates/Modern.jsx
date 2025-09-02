@@ -35,7 +35,7 @@ import HotelOutlinedIcon from "@mui/icons-material/HotelOutlined"
 import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined"
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined"
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined"
-import Availability from "../components/Availability"
+import Availability from "./modern/Availability"
 
 // ---------- helpers ----------
 const getDescription = (descriptions, langPref = "en") => {
