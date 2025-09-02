@@ -38,6 +38,7 @@ export default function ClassicBook({ cfg = {}, hotel = {} }) {
               />
             </Stack>
           </Grid>
+
           <Grid item xs={12} md={5}>
             <Box
               id="book"
@@ -64,4 +65,3 @@ export default function ClassicBook({ cfg = {}, hotel = {} }) {
     </ClassicLayout>
   )
 }
-

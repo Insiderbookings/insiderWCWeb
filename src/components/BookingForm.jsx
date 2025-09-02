@@ -3,7 +3,7 @@ import { Container, Box, Typography, Grid, TextField, Button, Alert, MenuItem, P
 import { tgxBookWithCard, tgxCreatePaymentIntent, tgxConfirmAndBook } from '../api/booking'
 
 const todayISO = () => new Date().toISOString().slice(0, 10)
-const addDaysISO = (d) => new Date(Date.now() + d*86400000).toISOString().slice(0, 10)
+const addDaysISO = (d) => new Date(Date.now() + d * 86400000).toISOString().slice(0, 10)
 
 export default function BookingForm({ cfg = {}, hotel = {}, compact = false }) {
   const [form, setForm] = React.useState({
@@ -42,7 +42,7 @@ export default function BookingForm({ cfg = {}, hotel = {}, compact = false }) {
         hotel.optionRefId ||
         ''
       const ci = usp.get('ci') || usp.get('checkIn')
-      const co = usp.get('co') || usp.get('checkOut')
+      the co = usp.get('co') || usp.get('checkOut')
       const hotelParam = usp.get('hotel') || ''
       setForm((s) => ({
         ...s,
@@ -65,7 +65,6 @@ export default function BookingForm({ cfg = {}, hotel = {}, compact = false }) {
     if (!STRIPE_PK) return
     let cancelled = false
     ;(async () => {
-      // load Stripe.js if not present
       if (!window.Stripe) {
         await new Promise((resolve, reject) => {
           const s = document.createElement('script')
@@ -85,9 +84,7 @@ export default function BookingForm({ cfg = {}, hotel = {}, compact = false }) {
       const card = elementsRef.current.create('card', { hidePostalCode: true })
       card.mount('#card-element')
       cardRef.current = card
-    })().catch((e) => {
-      console.error(e)
-    })
+    })().catch(console.error)
     return () => { cancelled = true }
   }, [paymentMode, STRIPE_PK])
 
@@ -103,7 +100,6 @@ export default function BookingForm({ cfg = {}, hotel = {}, compact = false }) {
       if (paymentMode === 'stripe') {
         if (!STRIPE_PK) throw new Error('Set VITE_STRIPE_PK in your environment')
         const createOut = await tgxCreatePaymentIntent({
-          // amount omitido: el backend lo calcula y valida
           currency: form.currency,
           guestInfo: {
             fullName: form.fullName,
@@ -141,7 +137,6 @@ export default function BookingForm({ cfg = {}, hotel = {}, compact = false }) {
           throw new Error(`Unexpected payment status: ${confirm.paymentIntent?.status}`)
         }
       } else {
-        // Direct card to backend (legacy)
         const out = await tgxBookWithCard({
           optionRefId: String(form.optionRefId || '').trim(),
           guestInfo: {
@@ -190,99 +185,99 @@ export default function BookingForm({ cfg = {}, hotel = {}, compact = false }) {
 
       <Paper variant="outlined" sx={{ p: compact ? 2 : 3 }} component="form" onSubmit={onSubmit}>
         <Stack spacing={3}>
-            <Typography variant="subtitle1" fontWeight={700}>Modo de pago</Typography>
-            <Stack direction="row" spacing={2}>
-              <Button variant={paymentMode==='stripe'?'contained':'outlined'} onClick={() => setPaymentMode('stripe')}>Stripe (recomendado)</Button>
-              <Button variant={paymentMode==='direct'?'contained':'outlined'} onClick={() => setPaymentMode('direct')}>Directo (legacy)</Button>
-            </Stack>
-            <Typography variant="subtitle1" fontWeight={700}>Datos de la opción</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField type="date" label="Check-in" InputLabelProps={{ shrink: true }} value={form.checkIn} onChange={onChange('checkIn')} fullWidth />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField type="date" label="Check-out" InputLabelProps={{ shrink: true }} value={form.checkOut} onChange={onChange('checkOut')} fullWidth />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField label="TGX Hotel Code" value={form.tgxHotelCode} onChange={onChange('tgxHotelCode')} fullWidth />
-              </Grid>
-              <Grid item xs={6} sm={3}>
-                <TextField type="number" label="Adults" value={form.adults} onChange={onChange('adults')} fullWidth />
-              </Grid>
-              <Grid item xs={6} sm={3}>
-                <TextField type="number" label="Children" value={form.children} onChange={onChange('children')} fullWidth />
-              </Grid>
-            </Grid>
-
-            <Typography variant="subtitle1" fontWeight={700}>Huésped</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField label="Full name" value={form.fullName} onChange={onChange('fullName')} fullWidth required />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField type="email" label="Email" value={form.email} onChange={onChange('email')} fullWidth required />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField label="Phone" value={form.phone} onChange={onChange('phone')} fullWidth />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField label="Special requests" value={form.specialRequests} onChange={onChange('specialRequests')} fullWidth multiline minRows={2} />
-              </Grid>
-            </Grid>
-
-            {paymentMode === 'stripe' ? (
-              <Box>
-                {!STRIPE_PK && (
-                  <Alert severity="warning" sx={{ mb: 2 }}>Set VITE_STRIPE_PK to use Stripe</Alert>
-                )}
-                <Box id="card-element" sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1 }} />
-              </Box>
-            ) : (
-              <>
-                <Typography variant="subtitle1" fontWeight={700}>Card (test)</Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={3}>
-                    <TextField select label="Type" value={form.type} onChange={onChange('type')} fullWidth>
-                      <MenuItem value="VI">Visa (VI)</MenuItem>
-                      <MenuItem value="MC">Mastercard (MC)</MenuItem>
-                      <MenuItem value="AX">Amex (AX)</MenuItem>
-                    </TextField>
-                  </Grid>
-                  <Grid item xs={12} sm={5}>
-                    <TextField label="Number" value={form.number} onChange={onChange('number')} fullWidth />
-                  </Grid>
-                  <Grid item xs={6} sm={2}>
-                    <TextField label="CVC" value={form.cvc} onChange={onChange('cvc')} fullWidth />
-                  </Grid>
-                  <Grid item xs={3} sm={1}>
-                    <TextField type="number" label="MM" value={form.expMonth} onChange={onChange('expMonth')} fullWidth />
-                  </Grid>
-                  <Grid item xs={3} sm={1}>
-                    <TextField type="number" label="YYYY" value={form.expYear} onChange={onChange('expYear')} fullWidth />
-                  </Grid>
-                </Grid>
-              </>
-            )}
-
-            <Box>
-              <Button type="submit" variant="contained" disabled={loading}>
-                {loading ? 'Processing…' : 'Confirm and book'}
-              </Button>
-            </Box>
-
-            {result && (
-              <Box>
-                <Alert severity="success" sx={{ mb: 2 }}>Booking realizada</Alert>
-                <Paper variant="outlined" sx={{ p: 2, bgcolor: 'grey.50' }}>
-                  <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{JSON.stringify(result, null, 2)}</pre>
-                </Paper>
-              </Box>
-            )}
+          <Typography variant="subtitle1" fontWeight={700}>Modo de pago</Typography>
+          <Stack direction="row" spacing={2}>
+            <Button variant={paymentMode==='stripe'?'contained':'outlined'} onClick={() => setPaymentMode('stripe')}>Stripe (recomendado)</Button>
+            <Button variant={paymentMode==='direct'?'contained':'outlined'} onClick={() => setPaymentMode('direct')}>Directo (legacy)</Button>
           </Stack>
+
+          <Typography variant="subtitle1" fontWeight={700}>Datos de la opción</Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField type="date" label="Check-in" InputLabelProps={{ shrink: true }} value={form.checkIn} onChange={onChange('checkIn')} fullWidth />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField type="date" label="Check-out" InputLabelProps={{ shrink: true }} value={form.checkOut} onChange={onChange('checkOut')} fullWidth />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField label="TGX Hotel Code" value={form.tgxHotelCode} onChange={onChange('tgxHotelCode')} fullWidth />
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <TextField type="number" label="Adults" value={form.adults} onChange={onChange('adults')} fullWidth />
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <TextField type="number" label="Children" value={form.children} onChange={onChange('children')} fullWidth />
+            </Grid>
+          </Grid>
+
+          <Typography variant="subtitle1" fontWeight={700}>Huésped</Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField label="Full name" value={form.fullName} onChange={onChange('fullName')} fullWidth required />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField type="email" label="Email" value={form.email} onChange={onChange('email')} fullWidth required />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField label="Phone" value={form.phone} onChange={onChange('phone')} fullWidth />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField label="Special requests" value={form.specialRequests} onChange={onChange('specialRequests')} fullWidth multiline minRows={2} />
+            </Grid>
+          </Grid>
+
+          {paymentMode === 'stripe' ? (
+            <Box>
+              {!STRIPE_PK && (
+                <Alert severity="warning" sx={{ mb: 2 }}>Set VITE_STRIPE_PK to use Stripe</Alert>
+              )}
+              <Box id="card-element" sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1 }} />
+            </Box>
+          ) : (
+            <>
+              <Typography variant="subtitle1" fontWeight={700}>Card (test)</Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={3}>
+                  <TextField select label="Type" value={form.type} onChange={onChange('type')} fullWidth>
+                    <MenuItem value="VI">Visa (VI)</MenuItem>
+                    <MenuItem value="MC">Mastercard (MC)</MenuItem>
+                    <MenuItem value="AX">Amex (AX)</MenuItem>
+                  </TextField>
+                </Grid>
+                <Grid item xs={12} sm={5}>
+                  <TextField label="Number" value={form.number} onChange={onChange('number')} fullWidth />
+                </Grid>
+                <Grid item xs={6} sm={2}>
+                  <TextField label="CVC" value={form.cvc} onChange={onChange('cvc')} fullWidth />
+                </Grid>
+                <Grid item xs={3} sm={1}>
+                  <TextField type="number" label="MM" value={form.expMonth} onChange={onChange('expMonth')} fullWidth />
+                </Grid>
+                <Grid item xs={3} sm={1}>
+                  <TextField type="number" label="YYYY" value={form.expYear} onChange={onChange('expYear')} fullWidth />
+                </Grid>
+              </Grid>
+            </>
+          )}
+
+          <Box>
+            <Button type="submit" variant="contained" disabled={loading}>
+              {loading ? 'Processing…' : 'Confirm and book'}
+            </Button>
+          </Box>
+
+          {result && (
+            <Box>
+              <Alert severity="success" sx={{ mb: 2 }}>Booking realizada</Alert>
+              <Paper variant="outlined" sx={{ p: 2, bgcolor: 'grey.50' }}>
+                <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{JSON.stringify(result, null, 2)}</pre>
+              </Paper>
+            </Box>
+          )}
+        </Stack>
       </Paper>
     </Box>
   )
 
   return compact ? content : <Container maxWidth="md">{content}</Container>
 }
-
