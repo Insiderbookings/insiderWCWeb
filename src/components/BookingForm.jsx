@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Container, Box, Typography, Grid, TextField, Button, Alert, MenuItem, Paper, Stack } from '@mui/material'
-import { tgxBookWithCard, tgxCreatePaymentIntent, tgxConfirmAndBook } from '../api/booking'
+import { tgxBookWithCard, tgxCreatePaymentIntent, tgxConfirmAndBook, tgxQuote } from '../api/booking'
 
 const todayISO = () => new Date().toISOString().slice(0, 10)
 const addDaysISO = (d) => new Date(Date.now() + d * 86400000).toISOString().slice(0, 10)
@@ -30,6 +30,7 @@ export default function BookingForm({ cfg = {}, hotel = {}, compact = false }) {
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState('')
   const [result, setResult] = React.useState(null)
+  const [numberOfPax, setNumberOfPax] = React.useState(null)
 
   // Prefill from query params or props if present
   React.useEffect(() => {
@@ -42,7 +43,7 @@ export default function BookingForm({ cfg = {}, hotel = {}, compact = false }) {
         hotel.optionRefId ||
         ''
       const ci = usp.get('ci') || usp.get('checkIn')
-      the co = usp.get('co') || usp.get('checkOut')
+      const co = usp.get('co') || usp.get('checkOut')
       const hotelParam = usp.get('hotel') || ''
       setForm((s) => ({
         ...s,
@@ -53,6 +54,34 @@ export default function BookingForm({ cfg = {}, hotel = {}, compact = false }) {
       }))
     } catch {}
   }, [cfg, hotel])
+
+  React.useEffect(() => {
+    let cancelled = false
+    const fromProps = cfg?.numberOfPax ?? hotel?.numberOfPax
+    if (Number.isFinite(fromProps)) {
+      setNumberOfPax(Number(fromProps))
+      return
+    }
+    if (!form.optionRefId) return
+    ;(async () => {
+      try {
+        const res = await tgxQuote({
+          searchOptionRefId: String(form.optionRefId || '').trim(),
+          bookingData: {
+            checkIn: form.checkIn,
+            checkOut: form.checkOut,
+            tgxHotelCode: String(form.tgxHotelCode || '').trim(),
+          },
+        })
+        if (cancelled) return
+        const np = res?.numberOfPax ?? res?.option?.numberOfPax
+        if (Number.isFinite(np)) setNumberOfPax(Number(np))
+      } catch (err) {
+        console.error('Failed to fetch option details', err)
+      }
+    })()
+    return () => { cancelled = true }
+  }, [cfg, hotel, form.optionRefId, form.checkIn, form.checkOut, form.tgxHotelCode])
 
   // Stripe.js setup (no react wrapper)
   const stripeRef = React.useRef(null)
@@ -92,7 +121,13 @@ export default function BookingForm({ cfg = {}, hotel = {}, compact = false }) {
 
   async function onSubmit(e) {
     e.preventDefault()
-    setError(''); setResult(null); setLoading(true)
+    setError(''); setResult(null)
+    const pax = Number(form.adults || 0) + Number(form.children || 0)
+    if (Number.isFinite(numberOfPax) && pax !== numberOfPax) {
+      setError(`La opción seleccionada admite ${numberOfPax} pasajeros`)
+      return
+    }
+    setLoading(true)
     try {
       if (!form.optionRefId) throw new Error('optionRefId is required')
       if (!form.fullName || !form.email) throw new Error('Full name and email are required')
