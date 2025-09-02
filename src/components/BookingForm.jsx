@@ -5,7 +5,7 @@ import { tgxBookWithCard, tgxCreatePaymentIntent, tgxConfirmAndBook } from '../a
 const todayISO = () => new Date().toISOString().slice(0, 10)
 const addDaysISO = (d) => new Date(Date.now() + d*86400000).toISOString().slice(0, 10)
 
-export default function BookingForm({ cfg = {}, hotel = {} }) {
+export default function BookingForm({ cfg = {}, hotel = {}, compact = false }) {
   const [form, setForm] = React.useState({
     optionRefId: '',
     checkIn: todayISO(),
@@ -177,20 +177,19 @@ export default function BookingForm({ cfg = {}, hotel = {} }) {
     }
   }
 
-  return (
-    <Container maxWidth="md">
-      <Box py={4}>
-        <Typography variant="h5" fontWeight={800} gutterBottom>
-          Book (Demo) – TGX book-with-card
-        </Typography>
-        <Typography color="text.secondary" gutterBottom>
-          Quick test of the direct TGX flow. Use a test card (e.g., 4111 1111 1111 1111).
-        </Typography>
+  const content = (
+    <Box py={compact ? 0 : 4}>
+      <Typography variant={compact ? 'h6' : 'h5'} fontWeight={800} gutterBottom>
+        Book (Demo) – TGX book-with-card
+      </Typography>
+      <Typography color="text.secondary" gutterBottom>
+        Quick test of the direct TGX flow. Use a test card (e.g., 4111 1111 1111 1111).
+      </Typography>
 
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
-        <Paper variant="outlined" sx={{ p: 3 }} component="form" onSubmit={onSubmit}>
-          <Stack spacing={3}>
+      <Paper variant="outlined" sx={{ p: compact ? 2 : 3 }} component="form" onSubmit={onSubmit}>
+        <Stack spacing={3}>
             <Typography variant="subtitle1" fontWeight={700}>Modo de pago</Typography>
             <Stack direction="row" spacing={2}>
               <Button variant={paymentMode==='stripe'?'contained':'outlined'} onClick={() => setPaymentMode('stripe')}>Stripe (recomendado)</Button>
@@ -280,9 +279,10 @@ export default function BookingForm({ cfg = {}, hotel = {} }) {
               </Box>
             )}
           </Stack>
-        </Paper>
-      </Box>
-    </Container>
+      </Paper>
+    </Box>
   )
+
+  return compact ? content : <Container maxWidth="md">{content}</Container>
 }
 
