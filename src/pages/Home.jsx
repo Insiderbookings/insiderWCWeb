@@ -1,8 +1,8 @@
 // src/pages/Home.jsx
 import * as React from 'react'
-import Classic from '../templates/Classic'
+import Classic from '../templates/classic/Classic'
 import { Box, CircularProgress, Alert } from '@mui/material'
-import Modern from '../templates/Modern'
+import Modern from '../templates/modern/Modern'
 import { useHotel } from '../HotelContext'
 
 const API_URL = import.meta.env.VITE_API_URL
