@@ -87,5 +87,32 @@ export async function tgxBookWithCard(payload = {}, { vaultExtra = {} } = {}) {
   return data
 }
 
-export { withVaultMeta }
+export async function createVaultPaymentIntent(payload = {}) {
+  const body = { ...payload, source: payload.source || "VAULT" }
+  const res = await fetch(`${API_URL}/payments/create-payment-intent`, {
+    method: 'POST',
+    headers: buildHeaders(),
+    body: JSON.stringify(body),
+  })
+  const ok = res.ok
+  const ct = res.headers.get('content-type') || ''
+  const data = ct.includes('application/json') ? await res.json() : await res.text()
+  if (!ok) throw new Error(data?.error || data || `HTTP ${res.status}`)
+  return data
+}
 
+export async function confirmVaultPayment(payload = {}) {
+  const body = { ...payload, source: payload.source || "VAULT" }
+  const res = await fetch(`${API_URL}/payments/confirm-and-book`, {
+    method: 'POST',
+    headers: buildHeaders(),
+    body: JSON.stringify(body),
+  })
+  const ok = res.ok
+  const ct = res.headers.get('content-type') || ''
+  const data = ct.includes('application/json') ? await res.json() : await res.text()
+  if (!ok) throw new Error(data?.error || data || `HTTP ${res.status}`)
+  return data
+}
+
+export { withVaultMeta }
